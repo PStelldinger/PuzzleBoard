@@ -84,6 +84,9 @@ def detect_puzzleboard(img):
     eigenvectors_at_max = np.concatenate((evx_at_max, evy_at_max)).reshape((-1, 2), order='F')
     first_eigenvector_at_max = eigenvectors_at_max[:] / (1e-30+np.linalg.norm(eigenvectors_at_max, axis=1).reshape(-1,1))
 
+    point_ids = []
+    point_coords = []
+
     NUMBER_WANTED_NEIGHBORS = 10
     if sub_dot.shape[0] > NUMBER_WANTED_NEIGHBORS:
         nbrs = NearestNeighbors(n_neighbors=NUMBER_WANTED_NEIGHBORS+1, algorithm='auto').fit(sub_dot)
@@ -219,9 +222,6 @@ def detect_puzzleboard(img):
         col_nr = 0
         root_nr = 0
         nrBoards = 0
-        
-        point_ids = []
-        point_coords = []
         
         while not (root is None):
             node = root

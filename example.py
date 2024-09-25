@@ -2,7 +2,7 @@ import cv2
 from puzzle_board.puzzle_board_detector import detect_puzzleboard
 
 
-img = cv2.imread('example.png')
+img = cv2.imread('examples//example1.png')
 
 ids, coords = detect_puzzleboard(img.copy())
 
