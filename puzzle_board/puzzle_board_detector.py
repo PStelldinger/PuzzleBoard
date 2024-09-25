@@ -231,9 +231,9 @@ def detect_puzzleboard(img):
                 col_nr = (col_nr + 1) % 6
                 board = PuzzleBoard(node, sub_dot, img2)
                 
-                for y in range(board.hvalid.shape[0]):
-                    for x in range(board.hvalid.shape[1]):
-                        if board.hvalid[y,x]:
+                for y in range(board.valid.shape[0]):
+                    for x in range(board.valid.shape[1]):
+                        if board.valid[y,x]:
                             point_ids.append(np.array(board.positions[:,y,x]))
                             point_coords.append(np.array(board.sub_dot[y,x,:]))
                     
