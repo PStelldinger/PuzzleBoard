@@ -175,7 +175,7 @@ def detect_puzzleboard(img):
                 neighbor_idx[i,1] = nearest_orthogonal
 
                 opp_orth_mask = (np.sum(nvecs*nvecs[pos,:].T,axis=1) < -thr3)
-                length_mask2 = (np.maximum(lens / lens[pos], lens[pos] / lens) <= 1.5)
+                length_mask2 = (np.maximum(lens / lens[pos], lens[pos] / lens) <= 1.5).flatten()
                 nearest_opp_orth = np.sum(np.cumprod(1 - neighb_mask[i,:] * opp_orth_mask * length_mask2))
                 if(nearest_opp_orth<NUMBER_WANTED_NEIGHBORS):
                     nb2o = idx_neighbors[i,nearest_opp_orth]   # index of nearest opposite orth neighbor with appropriate orientation
