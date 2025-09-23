@@ -8,11 +8,7 @@ PuzzleBoards can be used not only for camera calibration but also for camera pos
 
 This reposiory gives a first implementation of the decoding algorithm for pictures taken from a PuzzleBoard target.
 
-If you want to print a PuzzleBoard target you can use the PuzzleBoard generator from the following website:
-
-https://users.informatik.haw-hamburg.de/~stelldinger/pub/PuzzleBoard/welcome.html
-
-there you will also find demo videos and further information about the PuzzleBoard.
+If you want to print a PuzzleBoard target you can use the js PuzzleBoard generator (which you can find in the subfolder "Board Generator").
 
 # Usage
 
