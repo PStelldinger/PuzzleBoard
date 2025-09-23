@@ -2,7 +2,7 @@
 
 The PuzzleBoard is an alternative calibration pattern for geometric camera calibration. The often used checkerboard calibration pattern (based on Zhang et al.'s seminal work) lacks any positional encoding. Thus, the calibration pattern must be completely visible without any occlusions. In some applications alternative solutions are preferred. E.g. ArUco or ChArUco boards allow partial occlusions, but require a higher camera resolution to read the code.
 
-The PuzzleBoard is a new alternative that combines the advantages of checkerboard calibration patterns with a lightweight position coding that can be decoded at very low resolutions. Even very small image sections are unique in terms of translation and rotation. The decoding algorithm includes error correction and is computationally efficient.
+The PuzzleBoard is a new alternative that combines the advantages of checkerboard calibration patterns with a lightweight position coding that can be decoded at very low resolutions. Even very small image sections are unique in terms of translation and rotation. The decoding algorithm includes error correction and is computationally efficient.
 
 PuzzleBoards can be used not only for camera calibration but also for camera pose estimation and marker-based object localization tasks (the markers will then be small subpatterns of the PuzzleBoard pattern).
 
