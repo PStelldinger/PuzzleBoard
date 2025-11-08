@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PuzzleBoard: Board Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+			background-image: url('background.png');
+			background-repeat: repeat;
+			background-size: 1000px;
+            color: #24409d;
+        }
+        header {
+            background: #24409d;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background: #12204F;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 40px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #24409d;
+            color: #fff;
+            margin-top: 20px;
+        }
+		.iframe-container {
+			position: relative;
+			overflow: hidden;
+			width: 100%;
+			padding-top: 56.25%;
+		}
+		.responsive-iframe {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			width: 80%;
+			height: 80%;
+		}
+		</style>
+</head>
+
+<script type="text/javascript" src="minipdf.js"></script>
+<script type="text/javascript" src="puzzle.js"></script>
+<script> // copyright nsch0e
+    function generate() {
+        cont = document.getElementById("filecontent")
+        //console.log(code2)
+        let BASE_CODE = document.getElementById("CODE").value;
+        let BASE_CODE2 = document.getElementById("CODE2").value;
+        let WIDTH = parseInt(document.getElementById("WIDTH").value)
+        let HEIGHT = parseInt(document.getElementById("HEIGHT").value)
+        let START_X = parseInt(document.getElementById("START_X").value)
+        let START_Y = parseInt(document.getElementById("START_Y").value)
+        let RES_MM = parseInt(document.getElementById("RES_MM").value)
+        let RES_PER_SQ = RES_MM / 25.4 * 72.0
+        var PAPER_H
+        var PAPER_W
+        if (document.getElementById("CALC").checked) {
+            PAPER_W = (WIDTH) * RES_PER_SQ
+            PAPER_H = (HEIGHT) * RES_PER_SQ
+            document.getElementById("PAPER_W").value = WIDTH * RES_MM
+            document.getElementById("PAPER_H").value = HEIGHT * RES_MM
+        } else {
+            PAPER_W = parseInt(document.getElementById("PAPER_W").value) / 25.4 * 72.0
+            PAPER_H = parseInt(document.getElementById("PAPER_H").value) / 25.4 * 72.0
+        }
+        let text = generatePattern(
+            WIDTH
+            , HEIGHT
+            , START_X
+            , START_Y
+            , RES_PER_SQ
+            , PAPER_H
+            , PAPER_W
+            , BASE_CODE
+            , BASE_CODE2)
+        //cont.innerText = text
+        pdf = document.getElementById("pdf")
+        tmp = "data:application/pdf;base64," + btoa(text)
+        pdf.data = tmp
+    }
+</script>
+
+<body>
+
+    <header>
+        <h1>PuzzleBoard</h1>
+		In order to use the PuzzelBoard calibration method, you will need calibration boards. You can generate your custom PuzzleBoard pattern using the following generator. In addition to that, you will find some example patterns for download at the end of this page.
+    </header>
+
+        <section id="generator">
+            <h2>Board Generator</h2>
+			<p> You can generate a pdf of any part of the PuzzleBoard pattern by just choosing its size and starting position. Before downloading, you need to click at the "generate pattern" button. 
+			<p> Although it is not recommended, you can change the bit code for both the horizontal and the vertical edges. Do this only if you know what you are doing, as changes most probably result in non-unique position codes.
+
+			<table>
+				<tr>
+					<td><input type="number" value="0" id="START_X"></input> start x</td>
+					<td><input type="number" value="0" id="START_Y"></input> start y</td>
+				</tr>
+				<tr>
+					<td><input type="number" value="10" id="WIDTH"></input> width</td>
+					<td><input type="number" value="10" id="HEIGHT"></input> height</td>
+				</tr>
+				<tr>
+					<td><input type="number" value="" id="PAPER_W"></input> paper width [mm]</td>
+					<td><input type="number" value="" id="PAPER_H"></input> paper height [mm]</td>
+				</tr>
+				<tr>
+					<td><input type="number" value="10" id="RES_MM"></input> edge length [mm]</td>
+					<td><input type="checkbox" id="CALC" checked="true" /> calculate paper size</td>
+				</tr>
+				<tr>
+					<td colspan="2"><textarea style="width:400px;height:65px;white-space: pre;overflow-wrap: normal;overflow-x: scroll;"
+							id="CODE">00001011100001110101010100100011010110110000111011100010100100010001111110000010101111110100110010010101110101110000111111011011010110011011111011100111101001111010001
+01100001111110111111110100010010000011110001001100000100010001100001100000011100011010100011101110101101110110010010000110100110001110101000111000100110001111010100100
+01000001010000111010000111101011111010000010010010000101110100110110011101011010110010110010010010110011001011110111001110000000101011011111010110110011000011110100011</textarea>
+						<textarea style="width:400px;height:65px;white-space: pre;overflow-wrap: normal;overflow-x: scroll;"
+							id="CODE2">11111010100111111000010100110111100100000100110010011111100011010001110110100100001000111001111010000000100111000000010111110010110101111101110100101101011001001110010
+10110011000100110101100111011000011010100010010101011000001011000000111000001011011000011111010101101101100011001111001001001010111011011001110011001011100011100011001
+00110000010101000111101010010110000110010010000000110000111101000111101100101010100100101001011111101000000010110101101011111110001000111101011101100101000011011111111</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td><button onClick="generate()">generate pattern</button></td>
+				</tr>
+			</table>
+			<object id="pdf" data="" type="application/pdf" width="100%" height="400px">
+				<p>Unable to display PDF file.
+				</p>
+			</object>
+			<pre id="filecontent">
+			</pre>
+
+        </section>
+
+        <section id="pattern">
+            <h2>PuzzleBoard Patterns</h2>
+            <p>Here are some examples of PuzzleBoard patterns for download as pdf:</p>
+            <ul>
+                <li><a href="https://users.informatik.haw-hamburg.de/~stelldinger/pub/PuzzleBoard/PuzzleBoardPattern11x8at0x0.pdf">11x8 corners with 60mm edge length</a></li>
+                <li><a href="https://users.informatik.haw-hamburg.de/~stelldinger/pub/PuzzleBoard/PuzzleBoardPattern23x16at50x100.pdf">23x16 corners with 30mm edge length</a></li>
+                <li><a href="https://users.informatik.haw-hamburg.de/~stelldinger/pub/PuzzleBoard/PuzzleBoardPattern72x52at100x200.pdf">72x52 corners with 10mm edge length</a></li>
+                <li><a href="https://users.informatik.haw-hamburg.de/~stelldinger/pub/PuzzleBoard/PuzzleBoard501x501.pdf">Full 501x501 pattern</a></li>
+            </ul>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2024 <a href="mailto:peer.stelldinger@haw-hamburg.de" style="color:white">Prof. Dr. Peer Stelldinger</a> - <a href="https://www.haw-hamburg.de/hochschule/beschaeftigte/detail/person/person/show/peer-stelldinger/" style="color:white">Hamburg University of Applied Sciences</a></p>
+    </footer>
+
+</body>
+</html>
