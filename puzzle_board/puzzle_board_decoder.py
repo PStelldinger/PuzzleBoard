@@ -70,8 +70,8 @@ class PuzzleBoard:
 
         self.hbits = ((hvals>hbase)*2-1).reshape(self.hvalid.shape)*(self.hvalid>0)
         self.vbits = ((vvals>vbase)*2-1).reshape(self.vvalid.shape)*(self.vvalid>0)
-        hcode = _collapse_bits(np.rot90(self.hbits[::-1,::-1]))
-        vcode = _collapse_bits(self.vbits[::-1,::-1])
+        hcode1 = _collapse_bits(np.rot90(self.hbits[::-1,::-1]))
+        vcode1 = _collapse_bits(self.vbits[::-1,::-1])
         hcode2 = _collapse_bits(np.rot90(self.hbits[::-1,::-1]))[::-1,::-1]
         vcode2 = _collapse_bits(self.vbits)
         hcode3 = _collapse_bits(np.rot90(self.hbits))[::-1,::-1]
@@ -79,11 +79,11 @@ class PuzzleBoard:
         hcode4 = _collapse_bits(np.rot90(self.hbits))
         vcode4 = _collapse_bits(self.vbits[::-1,::-1])[::-1,::-1]
 
-        corrA1 = correlate2d(PuzzleBoard.code1, vcode, mode='same', boundary='wrap')
+        corrA1 = correlate2d(PuzzleBoard.code1, vcode1, mode='same', boundary='wrap')
         corrA2 = correlate2d(PuzzleBoard.code2, hcode3, mode='same', boundary='wrap')
         mxA=min(np.max(corrA1), np.max(corrA2))+0.01*max(np.max(corrA1), np.max(corrA2))
         mx=mxA
-        offs1 = np.array([1, (vcode.shape[1]-1)//2])
+        offs1 = np.array([1, (vcode1.shape[1]-1)//2])
         offs2 = np.array([1, (hcode3.shape[1]-1)//2])
         pos1=np.unravel_index(corrA1.argmax(), corrA1.shape)-offs1
         pos2=np.unravel_index(corrA2.argmax(), corrA2.shape)-offs2
@@ -104,12 +104,12 @@ class PuzzleBoard:
             pos2[0]=pos2[0]%3
             rot = 1
 
-        corrC1 = correlate2d(PuzzleBoard.code1, hcode, mode='same', boundary='wrap')
+        corrC1 = correlate2d(PuzzleBoard.code1, hcode1, mode='same', boundary='wrap')
         corrC2 = correlate2d(PuzzleBoard.code2, vcode4, mode='same', boundary='wrap')
         mxC=min(np.max(corrC1), np.max(corrC2))+0.01*max(np.max(corrC1), np.max(corrC2))
         if(mxC>mx):
             mx=mxC
-            offs1 = np.array([1, (hcode.shape[1]-1)//2])
+            offs1 = np.array([1, (hcode1.shape[1]-1)//2])
             offs2 = np.array([1, (vcode4.shape[1]-1)//2])
             pos1=np.unravel_index(corrC1.argmax(), corrC1.shape)-offs1
             pos2=np.unravel_index(corrC2.argmax(), corrC2.shape)-offs2
