@@ -31,7 +31,7 @@ def subpix_pos(img, corners):
         S=S*(S>0)
         S=S.astype(np.uint8)
 
-def detect_puzzleboard(img):
+def detect_puzzleboard(img, min_width=4):
     
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(float)
     gray = gray/255.
@@ -70,13 +70,13 @@ def detect_puzzleboard(img):
     second_eigenvector_x = h_d.f_xx - h_d.f_yy - root
     both_eigenvectors_y  = -2 * h_d.f_xy
 
-    # Berechne X-Wert und gemeinsamen Y-Wert des ersten (positiven) und des zweiten (negativen) Eigenvektors
+    # Compute x-value and common y-value of first (positive) and second (negative) Eigen-vector
     ev1_x_at_max = np.fromiter(( first_eigenvector_x[dot[idx, 0], dot[idx, 1]] for idx in range(len(dot))),float)
     ev2_x_at_max = np.fromiter((second_eigenvector_x[dot[idx, 0], dot[idx, 1]] for idx in range(len(dot))),float)
     ev_y_at_max  = np.fromiter(( both_eigenvectors_y[dot[idx, 0], dot[idx, 1]] for idx in range(len(dot))),float)
 
-    # Nutze Eigenvektor mit betragsmäßig größerem X-Wert (numerisch stabiler)
-    # Wenn dies der 2. Eigenvektor ist, drehe diesen um 90 Grad ([X,Y]->[Y,-X])
+    # Use Eigen-vector with greater absolute x-value (because this is numerically more stable)
+    # If this is the 2. Eigen-vector, rotate it by 90° ([X,Y]->[Y,-X])
     evx_at_max = ev1_x_at_max.copy()
     evy_at_max = ev_y_at_max.copy()
     evx_at_max[np.abs(ev2_x_at_max) > np.abs(ev1_x_at_max)] =  ev_y_at_max[np.abs(ev2_x_at_max) > np.abs(ev1_x_at_max)]
@@ -114,7 +114,7 @@ def detect_puzzleboard(img):
         nearest_neighbor = nearest_neighbor * has_neighbor[:,0]
         neighbor_idx[:,0] = idx_neighbors[np.arange(len(idx_neighbors)), nearest_neighbor]
         
-        # Achtung! Vorher müssen noch die Kollinearen Versionen des nächsten Nachbarn aussortiert werden!
+        # Attention! First, the collinear versions of the next neighbor must be sorted out!
         dir1 = sub_dot[neighbor_idx[:,0]] - sub_dot
         len1 = np.linalg.norm(dir1,axis=1).reshape(-1,1)
         dir1 = dir1 / len1
@@ -226,7 +226,7 @@ def detect_puzzleboard(img):
         while not (root is None):
             node = root
             dim = root.dimensions
-            if (root.size >= 12) and (min(dim[0]+dim[2]+1,dim[1]+dim[3]+1) >= 4):
+            if (root.size >= 12) and (min(dim[0]+dim[2]+1,dim[1]+dim[3]+1) >= min_width):
                 nrBoards = nrBoards + 1
                 col_nr = (col_nr + 1) % 6
                 board = PuzzleBoard(node, sub_dot, img2)
