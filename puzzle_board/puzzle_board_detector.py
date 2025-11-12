@@ -31,7 +31,7 @@ def subpix_pos(img, corners):
         S=S*(S>0)
         S=S.astype(np.uint8)
 
-def detect_puzzleboard(img, min_width=4):
+def detect_puzzleboard(img, min_width=4, curved=False):
     
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(float)
     gray = gray/255.
@@ -99,6 +99,8 @@ def detect_puzzleboard(img, min_width=4):
         thr1 = 0.38268  # 0.38268 => 67.5°
         thr2 = 0.92388  # 0.92388 => 22.5°
         thr3 = 0.98481  # 0.92388 => 10.0°
+        if curved:
+            thr3=thr2
 
         neighb_mask = orientation_diff_angle < thr1   
         diagonal_mask = orientation_diff_angle > thr2 
