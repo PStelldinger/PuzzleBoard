@@ -13,17 +13,17 @@ def _collapse_bits(code):
     return res / ctr
 
 
-class PuzzleBoard:
+class PuzzleBoardDecoder:
 
-    code1 = np.array([[0,0,0,0,1,0,1,1,1,0,0,0,0,1,1,1,0,1,0,1,0,1,0,1,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,1,0,0,0,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,0,1,0,1,1,1,1,1,1,0,1,0,0,1,1,0,0,1,0,0,1,0,1,0,1,1,1,0,1,0,1,1,1,0,0,0,0,1,1,1,1,1,1,0,1,1,0,1,1,0,1,0,1,1,0,0,1,1,0,1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,0,1], 
-                      [0,1,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,0,0,1,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,1,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,1,0,1,0,0,0,1,1,1,0,1,1,1,0,1,0,1,1,0,1,1,1,0,1,1,0,0,1,0,0,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,0,1,1,1,0,1,0,1,0,0,0,1,1,1,0,0,0,1,0,0,1,1,0,0,0,1,1,1,1,0,1,0,1,0,0,1,0,0],
-                      [0,1,0,0,0,0,0,1,0,1,0,0,0,0,1,1,1,0,1,0,0,0,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,1,0,1,1,1,0,1,0,0,1,1,0,1,1,0,0,1,1,1,0,1,0,1,1,0,1,0,1,1,0,0,1,0,1,1,0,0,1,0,0,1,0,0,1,0,1,1,0,0,1,1,0,0,1,0,1,1,1,1,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,0,1,0,1,1,0,1,1,1,1,1,0,1,0,1,1,0,1,1,0,0,1,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,1]])*2-1
-    code2 = np.array([[0,0,1,1,0,0,0,0,0,1,0,1,0,1,0,0,0,1,1,1,1,0,1,0,1,0,0,1,0,1,1,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,1,1,1,0,1,1,0,0,1,0,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,1,0,1,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0,1,1,1,0,1,1,0,0,1,0,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1],
-                      [1,0,1,1,0,0,1,1,0,0,0,1,0,0,1,1,0,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,1,1,0,1,0,1,0,0,0,1,0,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,0,1,1,0,1,1,0,0,0,0,1,1,1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,1,0,0,0,1,1,0,0,1,1,1,1,0,0,1,0,0,1,0,0,1,0,1,0,1,1,1,0,1,1,0,1,1,0,0,1,1,1,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,0,0,1],
-                      [1,1,1,1,1,0,1,0,1,0,0,1,1,1,1,1,1,0,0,0,0,1,0,1,0,0,1,1,0,1,1,1,1,0,0,1,0,0,0,0,0,1,0,0,1,1,0,0,1,0,0,1,1,1,1,1,1,0,0,0,1,1,0,1,0,0,0,1,1,1,0,1,1,0,1,0,0,1,0,0,0,0,1,0,0,0,1,1,1,0,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,1,0,0,1,0,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,0,0,1,0,1,1,0,1,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0]])*2-1
+    def __init__(self):
+        self.code1 = np.array([[0,0,0,0,1,0,1,1,1,0,0,0,0,1,1,1,0,1,0,1,0,1,0,1,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,1,0,0,0,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,0,1,0,1,1,1,1,1,1,0,1,0,0,1,1,0,0,1,0,0,1,0,1,0,1,1,1,0,1,0,1,1,1,0,0,0,0,1,1,1,1,1,1,0,1,1,0,1,1,0,1,0,1,1,0,0,1,1,0,1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,0,1], 
+                               [0,1,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,0,0,1,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,1,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,1,0,1,0,0,0,1,1,1,0,1,1,1,0,1,0,1,1,0,1,1,1,0,1,1,0,0,1,0,0,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,0,1,1,1,0,1,0,1,0,0,0,1,1,1,0,0,0,1,0,0,1,1,0,0,0,1,1,1,1,0,1,0,1,0,0,1,0,0],
+                               [0,1,0,0,0,0,0,1,0,1,0,0,0,0,1,1,1,0,1,0,0,0,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,1,0,1,1,1,0,1,0,0,1,1,0,1,1,0,0,1,1,1,0,1,0,1,1,0,1,0,1,1,0,0,1,0,1,1,0,0,1,0,0,1,0,0,1,0,1,1,0,0,1,1,0,0,1,0,1,1,1,1,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,0,1,0,1,1,0,1,1,1,1,1,0,1,0,1,1,0,1,1,0,0,1,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,1]])*2-1
+        self.code2 = np.array([[0,0,1,1,0,0,0,0,0,1,0,1,0,1,0,0,0,1,1,1,1,0,1,0,1,0,0,1,0,1,1,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,1,1,1,0,1,1,0,0,1,0,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,1,0,1,0,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0,1,1,1,0,1,1,0,0,1,0,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1],
+                               [1,0,1,1,0,0,1,1,0,0,0,1,0,0,1,1,0,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,1,1,0,1,0,1,0,0,0,1,0,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,0,1,1,0,1,1,0,0,0,0,1,1,1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,1,0,0,0,1,1,0,0,1,1,1,1,0,0,1,0,0,1,0,0,1,0,1,0,1,1,1,0,1,1,0,1,1,0,0,1,1,1,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,0,0,1],
+                               [1,1,1,1,1,0,1,0,1,0,0,1,1,1,1,1,1,0,0,0,0,1,0,1,0,0,1,1,0,1,1,1,1,0,0,1,0,0,0,0,0,1,0,0,1,1,0,0,1,0,0,1,1,1,1,1,1,0,0,0,1,1,0,1,0,0,0,1,1,1,0,1,1,0,1,0,0,1,0,0,0,0,1,0,0,0,1,1,1,0,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,1,0,0,1,0,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,0,0,1,0,1,1,0,1,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0]])*2-1
 
-
-    def __init__(self, root, sub_dot, img):
+    def decode(self, root, sub_dot, img):
         self.root = root
         dim = root.dimensions
         sizex = dim[0]+dim[2]+1
@@ -79,8 +79,8 @@ class PuzzleBoard:
         hcode4 = _collapse_bits(np.rot90(self.hbits))
         vcode4 = _collapse_bits(self.vbits[::-1,::-1])[::-1,::-1]
 
-        corrA1 = correlate2d(PuzzleBoard.code1, vcode1, mode='same', boundary='wrap')
-        corrA2 = correlate2d(PuzzleBoard.code2, hcode3, mode='same', boundary='wrap')
+        corrA1 = correlate2d(self.code1, vcode1, mode='same', boundary='wrap')
+        corrA2 = correlate2d(self.code2, hcode3, mode='same', boundary='wrap')
         mxA=min(np.max(corrA1), np.max(corrA2))+0.01*max(np.max(corrA1), np.max(corrA2))
         mx=mxA
         offs1 = np.array([1, (vcode1.shape[1]-1)//2])
@@ -91,8 +91,8 @@ class PuzzleBoard:
         pos2[0]=pos2[0]%3
         rot = 2
 
-        corrB1 = correlate2d(PuzzleBoard.code1, hcode4, mode='same', boundary='wrap')
-        corrB2 = correlate2d(PuzzleBoard.code2, vcode3, mode='same', boundary='wrap')
+        corrB1 = correlate2d(self.code1, hcode4, mode='same', boundary='wrap')
+        corrB2 = correlate2d(self.code2, vcode3, mode='same', boundary='wrap')
         mxB=min(np.max(corrB1), np.max(corrB2))+0.01*max(np.max(corrB1), np.max(corrB2))
         if(mxB>mx):
             mx=mxB
@@ -104,8 +104,8 @@ class PuzzleBoard:
             pos2[0]=pos2[0]%3
             rot = 1
 
-        corrC1 = correlate2d(PuzzleBoard.code1, hcode1, mode='same', boundary='wrap')
-        corrC2 = correlate2d(PuzzleBoard.code2, vcode4, mode='same', boundary='wrap')
+        corrC1 = correlate2d(self.code1, hcode1, mode='same', boundary='wrap')
+        corrC2 = correlate2d(self.code2, vcode4, mode='same', boundary='wrap')
         mxC=min(np.max(corrC1), np.max(corrC2))+0.01*max(np.max(corrC1), np.max(corrC2))
         if(mxC>mx):
             mx=mxC
@@ -117,8 +117,8 @@ class PuzzleBoard:
             pos2[0]=pos2[0]%3
             rot = 3
 
-        corrD1 = correlate2d(PuzzleBoard.code1, vcode2, mode='same', boundary='wrap')
-        corrD2 = correlate2d(PuzzleBoard.code2, hcode2, mode='same', boundary='wrap')
+        corrD1 = correlate2d(self.code1, vcode2, mode='same', boundary='wrap')
+        corrD2 = correlate2d(self.code2, hcode2, mode='same', boundary='wrap')
         mxD=min(np.max(corrD1), np.max(corrD2))+0.01*max(np.max(corrD1), np.max(corrD2))
         if(mxD>mx):
             mx=mxD
@@ -130,7 +130,7 @@ class PuzzleBoard:
             pos2[0]=pos2[0]%3
             rot = 0
 
-        pos = np.array([pos1[1]+167*((pos1[1]+pos2[0])%3), pos2[1]+167*((pos2[1]-pos1[0])%3)])
+        pos = np.array([pos1[1]+self.code1.shape[1]*((pos1[1]+pos2[0])%3), pos2[1]+self.code2.shape[1]*((pos2[1]-pos1[0])%3)])
         for i in range(rot):
             self.valid = np.rot90(self.valid)
             self.hvalid, self.vvalid = np.rot90(self.vvalid), np.rot90(self.hvalid)
@@ -139,8 +139,8 @@ class PuzzleBoard:
             self.hsub_dot, self.vsub_dot = np.rot90(self.vsub_dot), np.rot90(self.hsub_dot)
             self.node_id = np.rot90(self.node_id)
         xs,ys=np.meshgrid(range(self.valid.shape[1]),range(self.valid.shape[0]))
-        vfullCode = np.tile(PuzzleBoard.code1,(167,3))
-        hfullCode = np.tile(np.rot90(PuzzleBoard.code2[::-1,::-1]),(3,167))
+        vfullCode = np.tile(self.code1,(self.code2.shape[1],3))
+        hfullCode = np.tile(np.rot90(self.code2[::-1,::-1]),(3,self.code1.shape[1]))
         
         self.hcorrect = hfullCode[pos[1]:pos[1]+self.hbits.shape[0],pos[0]:pos[0]+self.hbits.shape[1]]
         if self.hcorrect.shape == self.hbits.shape:
@@ -154,3 +154,73 @@ class PuzzleBoard:
            self.vcorrect=1+0*self.vbits
         
         self.positions=np.stack((ys,xs))+pos[[1,0]].reshape((-1,1,1))
+
+class PuzzlePoleDecoder(PuzzleBoardDecoder):
+    
+    POLE12 = 1
+    POLE18 = 2
+    POLE24 = 4
+    POLE30 = 8
+    POLE36 = 16
+    POLE42 = 32
+    POLE48 = 64
+    
+    p12 = 73
+    p18 = 7
+    p24 = 242
+    p30 = 176
+    p36 = 325
+    p42 = 410
+    p48 = 115
+
+    def __init__(self, pole_type=POLE12):
+        
+        super().__init__()
+        
+        self.pole_type = pole_type
+
+        # Extend code2, by repeating the respective pole subpatterns,
+        # such that it can decode the chosen cyclic pole patterns
+
+        if (pole_type & PuzzlePoleDecoder.POLE42):
+            self.code2 = np.hstack((self.code2[:,0:PuzzlePoleDecoder.p42+42],
+                                         self.code2[:,PuzzlePoleDecoder.p42:]))
+        if (pole_type & PuzzlePoleDecoder.POLE36):
+            self.code2 = np.hstack((self.code2[:,0:PuzzlePoleDecoder.p36+36],
+                                         self.code2[:,PuzzlePoleDecoder.p36:]))
+        if (pole_type & PuzzlePoleDecoder.POLE24):
+            self.code2 = np.hstack((self.code2[:,0:PuzzlePoleDecoder.p24+24],
+                                         self.code2[:,PuzzlePoleDecoder.p24:]))
+        if (pole_type & PuzzlePoleDecoder.POLE30):
+            self.code2 = np.hstack((self.code2[:,0:PuzzlePoleDecoder.p30+30],
+                                         self.code2[:,PuzzlePoleDecoder.p30:]))
+        if (pole_type & PuzzlePoleDecoder.POLE48):
+            self.code2 = np.hstack((self.code2[:,0:PuzzlePoleDecoder.p48+48],
+                                         self.code2[:,PuzzlePoleDecoder.p48:]))
+        if (pole_type & PuzzlePoleDecoder.POLE12):
+            self.code2 = np.hstack((self.code2[:,0:PuzzlePoleDecoder.p12+12],
+                                         self.code2[:,PuzzlePoleDecoder.p12:]))
+        if (pole_type & PuzzlePoleDecoder.POLE18):
+            self.code2 = np.hstack((self.code2[:,0:PuzzlePoleDecoder.p18+18],
+                                         self.code2[:,PuzzlePoleDecoder.p18:]))
+
+    def decode(self, root, sub_dot, img):
+
+        super().decode(root, sub_dot, img)
+        
+        # Reduce the found coordinates by removing the cyclic repetitions
+        if (self.pole_type & PuzzlePoleDecoder.POLE18):
+            self.positions[self.positions>=PuzzlePoleDecoder.p18+18] -= 18
+        if (self.pole_type & PuzzlePoleDecoder.POLE12):
+            self.positions[self.positions>=PuzzlePoleDecoder.p12+12] -= 12
+        if (self.pole_type & PuzzlePoleDecoder.POLE48):
+            self.positions[self.positions>=PuzzlePoleDecoder.p48+48] -= 48
+        if (self.pole_type & PuzzlePoleDecoder.POLE30):
+            self.positions[self.positions>=PuzzlePoleDecoder.p30+30] -= 30
+        if (self.pole_type & PuzzlePoleDecoder.POLE24):
+            self.positions[self.positions>=PuzzlePoleDecoder.p24+24] -= 24
+        if (self.pole_type & PuzzlePoleDecoder.POLE36):
+            self.positions[self.positions>=PuzzlePoleDecoder.p36+36] -= 36
+        if (self.pole_type & PuzzlePoleDecoder.POLE42):
+            self.positions[self.positions>=PuzzlePoleDecoder.p42+42] -= 42
+            

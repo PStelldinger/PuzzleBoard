@@ -8,7 +8,7 @@ from puzzle_board.cornerdetection import sub_pixel_detection
 from puzzle_board.cornerdetection.hessian_detector import HessianDetector, image_regional_max_as_binary_matrix
 from puzzle_board.cornerdetection.corner_checker import CornerChecker
 from puzzle_board.grid_generator import Grid
-from puzzle_board.puzzle_board_decoder import PuzzleBoard
+from puzzle_board.puzzle_board_decoder import PuzzleBoardDecoder, PuzzlePoleDecoder
 
 
 def subpix_pos(img, corners):
@@ -31,8 +31,8 @@ def subpix_pos(img, corners):
         S=S*(S>0)
         S=S.astype(np.uint8)
 
-def detect_puzzleboard(img, min_width=4, curved=False):
-    
+def _detect_puzzles(img, min_width, curved, decoder):
+        
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(float)
     gray = gray/255.
 
@@ -231,18 +231,30 @@ def detect_puzzleboard(img, min_width=4, curved=False):
             if (root.size >= 12) and (min(dim[0]+dim[2]+1,dim[1]+dim[3]+1) >= min_width):
                 nrBoards = nrBoards + 1
                 col_nr = (col_nr + 1) % 6
-                board = PuzzleBoard(node, sub_dot, img2)
+                decoder.decode(node, sub_dot, img2)
                 
-                for y in range(board.valid.shape[0]):
-                    for x in range(board.valid.shape[1]):
-                        if board.valid[y,x]:
-                            point_ids.append(np.array(board.positions[:,y,x]))
-                            point_coords.append(np.array(board.sub_dot[y,x,:]))
+                for y in range(decoder.valid.shape[0]):
+                    for x in range(decoder.valid.shape[1]):
+                        if decoder.valid[y,x]:
+                            point_ids.append(np.array(decoder.positions[:,y,x]))
+                            point_coords.append(np.array(decoder.sub_dot[y,x,:]))
                     
             root = root.next_root
             root_nr = root_nr + 1
             if root == first_root:
                 break
 
+    return point_ids, point_coords
 
+def detect_puzzleboard(img, min_width=4, curved=False):
+    point_ids, point_coords = _detect_puzzles(img, min_width, curved, decoder=PuzzleBoardDecoder())
+    return point_ids, point_coords
+
+def detect_puzzlepole(img, min_width=-1, curved=True, pole_type = PuzzlePoleDecoder.POLE12):
+    if(min_width < 0):
+        if(pole_type & PuzzlePoleDecoder.POLE12):
+            min_width = 3
+        else:
+            min_width = 4
+    point_ids, point_coords = _detect_puzzles(img, min_width, curved, decoder=PuzzlePoleDecoder(pole_type))
     return point_ids, point_coords
