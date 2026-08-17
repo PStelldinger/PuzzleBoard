@@ -35,15 +35,15 @@ class HessianDetector:
     def __init__(self, image: np.ndarray, epsilon=0.03):
         # already smoothed, so we can ignore using the actual sobel-operator but instead using the
         # discrete derivatives
-        self.y_derivative_filter = np.array([[-1], [0], [1]])
-        self.x_derivative_filter = np.array([[-1, 0, 1]])
+        self.y_derivative_filter = np.array([[-1], [0], [1]]).astype(image.dtype)
+        self.x_derivative_filter = np.array([[-1, 0, 1]]).astype(image.dtype)
 
         self.diagonal_kernel_one = np.array([[0, 0, 1],
                                              [0, 0, 0],
-                                             [-1, 0, 0]])
+                                             [-1, 0, 0]]).astype(image.dtype)
         self.diagonal_kernel_two = np.array([[1, 0, 0],
                                              [0, 0, 0],
-                                             [0, 0, -1]])
+                                             [0, 0, -1]]).astype(image.dtype)
         self.epsilon = epsilon
         self.f_y = _create_derivative(image, self.y_derivative_filter)
         self.f_yy = _create_derivative(self.f_y, self.y_derivative_filter)

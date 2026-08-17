@@ -31,10 +31,12 @@ def subpix_pos(img, corners):
         S=S*(S>0)
         S=S.astype(np.uint8)
 
-def _detect_puzzles(img, min_width, curved, decoder):
-        
-    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(float)
-    gray = gray/255.
+def _detect_puzzles(img, min_width, curved, decoder, filter_dtype=np.float32):
+
+    assert filter_dtype in [np.float32, np.float64], 'Currently only float dtype is supported'
+
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(filter_dtype)
+    gray = gray/255
 
 # For low resolution images, there should be less blurring:
 #    img2 = cv2.filter2D(src=gray, ddepth=-1, kernel=np.array([[0,1,0],[1,1,1],[0,1,0]]))
@@ -43,8 +45,8 @@ def _detect_puzzles(img, min_width, curved, decoder):
     h_d = HessianDetector(img2)
 
     profile, mS = h_d.detect_corners(img2, k=1.0)
-    
-    corner_checker=CornerChecker()
+
+    corner_checker=CornerChecker(dtype=filter_dtype)
     mS_corner = corner_checker.filter_corners(image=img2)
 
     mS = np.where(mS_corner > 0, mS, 0)
@@ -61,7 +63,7 @@ def _detect_puzzles(img, min_width, curved, decoder):
     dot = dot[dot[:, 0] <= img.shape[0] - 3]
     dot = dot[dot[:, 1] <= img.shape[1] - 3]
 
-    sub_dot = (sub_pixel_detection.get_subpixel_positions(profile, mS, dot))
+    sub_dot = sub_pixel_detection.get_subpixel_positions(profile, mS, dot)
 
     root = np.sqrt((h_d.f_xx - h_d.f_yy)**2 + 4 * h_d.f_xy**2)
     first_eigenvector_x  = h_d.f_xx - h_d.f_yy + root
