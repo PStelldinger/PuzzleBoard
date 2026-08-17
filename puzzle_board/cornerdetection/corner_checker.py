@@ -4,74 +4,77 @@ import numpy as np
 
 class CornerChecker:
 
-    def __init__(self):
+    def __init__(self, dtype=np.float32):
+
+        self.dtype = dtype
+
         self.outer_filter = [
             np.array([[-1, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
-                      [1, 0, 0, 0, -1]]),
+                      [1, 0, 0, 0, -1]], dtype=dtype),
 
             np.array([[0, -1, 0, 0, 0],
                       [0, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0],
                       [1, 0, 0, 0, 0],
-                      [0, 0, 0, -1, 0]]),
+                      [0, 0, 0, -1, 0]], dtype=dtype),
 
             np.array([[0, 0, -1, 0, 0],
                       [0, 0, 0, 0, 0],
                       [1, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0],
-                      [0, 0, -1, 0, 0]])
+                      [0, 0, -1, 0, 0]], dtype=dtype)
         ]
         self.inner_filter = [
             np.array([[-1, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 1]]),
+                      [0, 0, 0, 0, 1]], dtype=dtype),
 
             np.array([[0, -1, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
-                      [0, 0, 0, 1, 0]]),
+                      [0, 0, 0, 1, 0]], dtype=dtype),
 
             np.array([[0, 0, -1, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
-                      [0, 0, 1, 0, 0]]),
+                      [0, 0, 1, 0, 0]], dtype=dtype),
 
             np.array([[0, 0, 0, -1, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
-                      [0, 1, 0, 0, 0]]),
+                      [0, 1, 0, 0, 0]], dtype=dtype),
 
             np.array([[0, 0, 0, 0, -1],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
-                      [1, 0, 0, 0, 0]]),
+                      [1, 0, 0, 0, 0]], dtype=dtype),
 
             np.array([[0, 0, 0, 0, 0],
                       [-1, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 1],
-                      [0, 0, 0, 0, 0]]),
+                      [0, 0, 0, 0, 0]], dtype=dtype),
 
             np.array([[0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0],
                       [-1, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0]]),
+                      [0, 0, 0, 0, 0]], dtype=dtype),
 
             np.array([[0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0],
                       [-1, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0]])
+                      [0, 0, 0, 0, 0]], dtype=dtype)
         ]
         self.p = 1
 
@@ -80,8 +83,8 @@ class CornerChecker:
         self.inner_filters_array = None
 
     def allocate_memory(self, image_size):
-        self.outer_filters_array = np.zeros((len(self.outer_filter), *image_size))
-        self.inner_filters_array = np.zeros((len(self.inner_filter), *image_size))
+        self.outer_filters_array = np.zeros((len(self.outer_filter), *image_size), dtype=self.dtype)
+        self.inner_filters_array = np.zeros((len(self.inner_filter), *image_size), dtype=self.dtype)
 
     def filter_corners(self, image: np.ndarray) -> np.ndarray:
 
