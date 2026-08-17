@@ -47,9 +47,7 @@ def _detect_puzzles(img, min_width, curved, decoder):
     corner_checker=CornerChecker()
     mS_corner = corner_checker.filter_corners(image=img2)
 
-    mS_corner_binary = np.where(mS_corner > 0, 1, 0)
-
-    mS = mS * mS_corner_binary
+    mS = np.where(mS_corner > 0, mS, 0)
     mS = mS / np.nanmax(mS + 0.00000001)
     mS[mS < 0.03] = 0.0
     mS = image_regional_max_as_binary_matrix(mS) * mS
