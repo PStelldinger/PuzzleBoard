@@ -55,16 +55,16 @@ class HessianDetector:
 
 
     def _allocate_memory(self, image_size):
-        self.f_y =  np.zeros(image_size, dtype=self.dtype)
-        self.f_yy = np.zeros(image_size, dtype=self.dtype)
-        self.f_x = np.zeros(image_size, dtype=self.dtype)
-        self.f_xx = np.zeros(image_size, dtype=self.dtype)
-        self.f_xy = np.zeros(image_size, dtype=self.dtype)
-        self.f_rl = np.zeros(image_size, dtype=self.dtype)
-        self.f_rl_rl = np.zeros(image_size, dtype=self.dtype)
-        self.f_lr = np.zeros(image_size, dtype=self.dtype)
-        self.f_lr_lr = np.zeros(image_size, dtype=self.dtype)
-        self.f_rl_lr = np.zeros(image_size, dtype=self.dtype)
+        self.f_y =  np.empty(image_size, dtype=self.dtype)
+        self.f_yy = np.empty(image_size, dtype=self.dtype)
+        self.f_x = np.empty(image_size, dtype=self.dtype)
+        self.f_xx = np.empty(image_size, dtype=self.dtype)
+        self.f_xy = np.empty(image_size, dtype=self.dtype)
+        self.f_rl = np.empty(image_size, dtype=self.dtype)
+        self.f_rl_rl = np.empty(image_size, dtype=self.dtype)
+        self.f_lr = np.empty(image_size, dtype=self.dtype)
+        self.f_lr_lr = np.empty(image_size, dtype=self.dtype)
+        self.f_rl_lr = np.empty(image_size, dtype=self.dtype)
 
     def filter_image(self, image):
 

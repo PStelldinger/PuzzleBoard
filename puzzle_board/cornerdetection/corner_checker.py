@@ -83,8 +83,8 @@ class CornerChecker:
         self.inner_filters_array = None
 
     def allocate_memory(self, image_size):
-        self.outer_filters_array = np.zeros((len(self.outer_filter), *image_size), dtype=self.dtype)
-        self.inner_filters_array = np.zeros((len(self.inner_filter), *image_size), dtype=self.dtype)
+        self.outer_filters_array = np.empty((len(self.outer_filter), *image_size), dtype=self.dtype)
+        self.inner_filters_array = np.empty((len(self.inner_filter), *image_size), dtype=self.dtype)
 
     def filter_corners(self, image: np.ndarray) -> np.ndarray:
 
