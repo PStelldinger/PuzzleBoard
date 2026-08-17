@@ -31,7 +31,16 @@ def subpix_pos(img, corners):
         S=S*(S>0)
         S=S.astype(np.uint8)
 
-def _detect_puzzles(img, min_width, curved, decoder, filter_dtype=np.float32):
+
+# use hesse detector and corner detector global since they reserve memory for filter operations which should not be
+# discarded when _detect_puzzle returns
+filter_dtype=np.float32
+h_d = HessianDetector(dtype=filter_dtype)
+corner_checker=CornerChecker(dtype=filter_dtype)
+
+def _detect_puzzles(img, min_width, curved, decoder):
+
+    global filter_dtype, h_d, corner_checker
 
     assert filter_dtype in [np.float32, np.float64], 'Currently only float dtype is supported'
 
@@ -42,8 +51,7 @@ def _detect_puzzles(img, min_width, curved, decoder, filter_dtype=np.float32):
 #    img2 = cv2.filter2D(src=gray, ddepth=-1, kernel=np.array([[0,1,0],[1,1,1],[0,1,0]]))
     img2 = cv2.GaussianBlur(gray, (3, 3), 1)
 
-    h_d = HessianDetector(img2)
-
+    h_d.filter_image(img2)
     profile, mS = h_d.detect_corners(img2, k=1.0)
 
     corner_checker=CornerChecker(dtype=filter_dtype)
