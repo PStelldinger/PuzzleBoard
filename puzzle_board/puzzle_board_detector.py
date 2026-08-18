@@ -88,13 +88,8 @@ def _detect_puzzles(img, min_width, curved, decoder):
     dot = dot[dot[:, 0] <= img.shape[0] - 3]
     dot = dot[dot[:, 1] <= img.shape[1] - 3]
 
-    db_time1 = time.time()
-    sub_dot = sub_pixel_detection.get_subpixel_positions(profile, mS, dot)
-    db_time2 = time.time()
-    sub_dot_new = sub_pixel_detection.get_subpixel_positions_new(profile, dot)
-    db_time3 = time.time()
-    print(f'get_subpixel_positions {db_time2 - db_time1}')
-    print(f'get_subpixel_positions_new {db_time3 - db_time2}')
+    # compute the chessboard corners with sub-pixel precision
+    sub_dot = sub_pixel_detection.get_subpixel_positions(profile, dot)
 
     # Compute x-value and common y-value of first (positive) and second (negative) Eigen-vector
     ev1_x_at_max = np.fromiter(( first_eigenvector_x[dot[idx, 0], dot[idx, 1]] for idx in range(len(dot))),float)
