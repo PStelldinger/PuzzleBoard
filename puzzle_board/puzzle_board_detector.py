@@ -64,6 +64,21 @@ def _filter_image(img):
     mS[mS < 0.03] = 0.0
     mS = image_regional_max_as_binary_matrix(mS) * mS
 
+    root = np.sqrt((h_d.f_xx - h_d.f_yy)**2 + 4 * h_d.f_xy**2)
+    first_eigenvector_x  = h_d.f_xx - h_d.f_yy + root
+    second_eigenvector_x = h_d.f_xx - h_d.f_yy - root
+    both_eigenvectors_y  = -2 * h_d.f_xy
+
+    return img2, profile, mS, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y
+
+
+def _detect_puzzles(img, min_width, curved, decoder):
+
+
+    db_time1 = time.time()
+    img2, profile, mS, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y = _filter_image(img)
+    print(f'time filter images {time.time()-db_time1}')
+
     dot_row, dot_col = np.where(mS > 0)
 
     dot = np.column_stack((dot_row, dot_col))
@@ -73,22 +88,13 @@ def _filter_image(img):
     dot = dot[dot[:, 0] <= img.shape[0] - 3]
     dot = dot[dot[:, 1] <= img.shape[1] - 3]
 
-    sub_dot = sub_pixel_detection.get_subpixel_positions(profile, mS, dot)
-
-    root = np.sqrt((h_d.f_xx - h_d.f_yy)**2 + 4 * h_d.f_xy**2)
-    first_eigenvector_x  = h_d.f_xx - h_d.f_yy + root
-    second_eigenvector_x = h_d.f_xx - h_d.f_yy - root
-    both_eigenvectors_y  = -2 * h_d.f_xy
-
-    return img2, mS, dot, sub_dot, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y
-
-
-def _detect_puzzles(img, min_width, curved, decoder):
-
-
     db_time1 = time.time()
-    img2, mS, dot, sub_dot, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y = _filter_image(img)
-    print(f'time filter images {time.time()-db_time1}')
+    sub_dot = sub_pixel_detection.get_subpixel_positions(profile, mS, dot)
+    db_time2 = time.time()
+    sub_dot_new = sub_pixel_detection.get_subpixel_positions_new(profile, dot)
+    db_time3 = time.time()
+    print(f'get_subpixel_positions {db_time2 - db_time1}')
+    print(f'get_subpixel_positions_new {db_time3 - db_time2}')
 
     # Compute x-value and common y-value of first (positive) and second (negative) Eigen-vector
     ev1_x_at_max = np.fromiter(( first_eigenvector_x[dot[idx, 0], dot[idx, 1]] for idx in range(len(dot))),float)
