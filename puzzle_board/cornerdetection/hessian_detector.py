@@ -13,10 +13,10 @@ def image_regional_max_as_binary_matrix(max_s_one_matrix):
     maximum_positions = peak_local_max(max_s_one_matrix, min_distance=5)
     maximum_positions = np.array(maximum_positions)
     #print(f'shape of maximum_positions = {maximum_positions.shape}')
-    max_s_one_matrix = max_s_one_matrix * 0
-    for pos in maximum_positions:
-    #    print(f'pos: {pos}')
-        max_s_one_matrix[pos[0], pos[1]] = 1
+
+    # create emtpy matrix and set all local max positions to 1
+    max_s_one_matrix[...] = 0
+    max_s_one_matrix[maximum_positions[:, 0], maximum_positions[:, 1]] = 1
 
     #print(f'max_s_one_matrix after finding maxima ->\n{max_s_one_matrix}')
     return max_s_one_matrix
