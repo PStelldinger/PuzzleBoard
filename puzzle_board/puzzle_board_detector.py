@@ -1,3 +1,4 @@
+import time
 import cv2
 import numpy as np
 from skimage.feature import hessian_matrix, hessian_matrix_eigvals
@@ -41,11 +42,22 @@ corner_checker=CornerChecker(dtype=filter_dtype)
 
 def _filter_image(img):
 
-    h_d.filter_image(img)
-    profile, mS = h_d.detect_corners(img, k=1.0)
+    global filter_dtype, h_d, corner_checker
+
+    assert filter_dtype in [np.float32, np.float64], 'Currently only float dtype is supported'
+
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(filter_dtype)
+    gray = gray / 255
+
+    # For low resolution images, there should be less blurring:
+    #    img2 = cv2.filter2D(src=gray, ddepth=-1, kernel=np.array([[0,1,0],[1,1,1],[0,1,0]]))
+    img2 = cv2.GaussianBlur(gray, (3, 3), 1)
+
+    h_d.filter_image(img2)
+    profile, mS = h_d.detect_corners(img2, k=1.0)
 
     corner_checker=CornerChecker(dtype=filter_dtype)
-    mS_corner = corner_checker.filter_corners(image=img)
+    mS_corner = corner_checker.filter_corners(image=img2)
 
     mS = np.where(mS_corner > 0, mS, 0)
     mS = mS / np.nanmax(mS + 0.00000001)
@@ -68,23 +80,15 @@ def _filter_image(img):
     second_eigenvector_x = h_d.f_xx - h_d.f_yy - root
     both_eigenvectors_y  = -2 * h_d.f_xy
 
-    return mS, dot, sub_dot, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y
+    return img2, mS, dot, sub_dot, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y
 
 
 def _detect_puzzles(img, min_width, curved, decoder):
 
-    global filter_dtype, h_d, corner_checker
 
-    assert filter_dtype in [np.float32, np.float64], 'Currently only float dtype is supported'
-
-    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(filter_dtype)
-    gray = gray/255
-
-# For low resolution images, there should be less blurring:
-#    img2 = cv2.filter2D(src=gray, ddepth=-1, kernel=np.array([[0,1,0],[1,1,1],[0,1,0]]))
-    img2 = cv2.GaussianBlur(gray, (3, 3), 1)
-
-    mS, dot, sub_dot, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y = _filter_image(img2)
+    db_time1 = time.time()
+    img2, mS, dot, sub_dot, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y = _filter_image(img)
+    print(f'time filter images {time.time()-db_time1}')
 
     # Compute x-value and common y-value of first (positive) and second (negative) Eigen-vector
     ev1_x_at_max = np.fromiter(( first_eigenvector_x[dot[idx, 0], dot[idx, 1]] for idx in range(len(dot))),float)
