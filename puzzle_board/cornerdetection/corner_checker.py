@@ -114,12 +114,12 @@ class CornerChecker:
         for i, f in enumerate(self.inner_filter):
             cv2.filter2D(image, -1, f, dst=self.inner_filters_array[i])
 
-        inner_filter_array = self._inner_filter(image)
-
+        # alternative algorithm for inner filter (unfortunately it is a little bit slower)
+        #inner_filter_array = self._inner_filter(image)
         # To test inner filter equality
-        assert self.inner_filters_array.shape == inner_filter_array.shape
-        for x1, x2 in zip(self.inner_filters_array, inner_filter_array):
-            np.array_equal(x1, x2)
+        #assert self.inner_filters_array.shape == inner_filter_array.shape
+        #for x1, x2 in zip(self.inner_filters_array, inner_filter_array):
+        #    np.array_equal(x1, x2)
 
         # Taking max along axis=0 and multiplying by p/2
         max_result1 = self.p * np.max(np.abs(self.outer_filters_array), axis=0) / 2
