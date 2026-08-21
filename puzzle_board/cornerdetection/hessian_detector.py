@@ -13,53 +13,77 @@ def image_regional_max_as_binary_matrix(max_s_one_matrix):
     maximum_positions = peak_local_max(max_s_one_matrix, min_distance=5)
     maximum_positions = np.array(maximum_positions)
     #print(f'shape of maximum_positions = {maximum_positions.shape}')
-    max_s_one_matrix = max_s_one_matrix * 0
-    for pos in maximum_positions:
-    #    print(f'pos: {pos}')
-        max_s_one_matrix[pos[0], pos[1]] = 1
+
+    # create emtpy matrix and set all local max positions to 1
+    max_s_one_matrix[...] = 0
+    max_s_one_matrix[maximum_positions[:, 0], maximum_positions[:, 1]] = 1
 
     #print(f'max_s_one_matrix after finding maxima ->\n{max_s_one_matrix}')
     return max_s_one_matrix
 
 
-def _apply_filter(image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
-    return cv2.filter2D(image, -1, kernel)
-
-
-def _create_derivative(in_image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
-    return _apply_filter(in_image, kernel)
+def _apply_filter(image: np.ndarray, kernel: np.ndarray, dst: np.ndarray) -> np.ndarray:
+    return cv2.filter2D(image, -1, kernel, dst=dst)
 
 
 class HessianDetector:
 
-    def __init__(self, image: np.ndarray, epsilon=0.03):
+    def __init__(self, dtype=np.float32, epsilon=0.03):
         # already smoothed, so we can ignore using the actual sobel-operator but instead using the
         # discrete derivatives
-        self.y_derivative_filter = np.array([[-1], [0], [1]])
-        self.x_derivative_filter = np.array([[-1, 0, 1]])
+        self.y_derivative_filter = np.array([[-1], [0], [1]]).astype(dtype)
+        self.x_derivative_filter = np.array([[-1, 0, 1]]).astype(dtype)
 
         self.diagonal_kernel_one = np.array([[0, 0, 1],
                                              [0, 0, 0],
-                                             [-1, 0, 0]])
+                                             [-1, 0, 0]]).astype(dtype)
         self.diagonal_kernel_two = np.array([[1, 0, 0],
                                              [0, 0, 0],
-                                             [0, 0, -1]])
+                                             [0, 0, -1]]).astype(dtype)
+        self.dtype = dtype
         self.epsilon = epsilon
-        self.f_y = _create_derivative(image, self.y_derivative_filter)
-        self.f_yy = _create_derivative(self.f_y, self.y_derivative_filter)
-        self.f_x = _create_derivative(image, self.x_derivative_filter)
-        self.f_xx = _create_derivative(self.f_x, self.x_derivative_filter)
-        self.f_xy = _create_derivative(self.f_y, self.x_derivative_filter)
-        self.f_rl = _apply_filter(image, self.diagonal_kernel_one)
-        self.f_rl_rl = _apply_filter(self.f_rl,
-                                          self.diagonal_kernel_one)
+        self.f_y = None
+        self.f_yy = None
+        self.f_x = None
+        self.f_xx = None
+        self.f_xy = None
+        self.f_rl = None
+        self.f_rl_rl = None
+        self.f_lr = None
+        self.f_lr_lr = None
+        self.f_rl_lr = None
 
-        self.f_lr = _apply_filter(image, self.diagonal_kernel_two)
-        self.f_lr_lr = _apply_filter(self.f_lr,
-                                          self.diagonal_kernel_two)
 
-        self.f_rl_lr = _apply_filter(self.f_rl,
-                                          self.diagonal_kernel_two)
+    def _allocate_memory(self, image_size):
+        self.f_y =  np.empty(image_size, dtype=self.dtype)
+        self.f_yy = np.empty(image_size, dtype=self.dtype)
+        self.f_x = np.empty(image_size, dtype=self.dtype)
+        self.f_xx = np.empty(image_size, dtype=self.dtype)
+        self.f_xy = np.empty(image_size, dtype=self.dtype)
+        self.f_rl = np.empty(image_size, dtype=self.dtype)
+        self.f_rl_rl = np.empty(image_size, dtype=self.dtype)
+        self.f_lr = np.empty(image_size, dtype=self.dtype)
+        self.f_lr_lr = np.empty(image_size, dtype=self.dtype)
+        self.f_rl_lr = np.empty(image_size, dtype=self.dtype)
+
+    def filter_image(self, image):
+
+        # reserve memory for the filtered images
+        if self.f_y is None or self.f_y.shape[:2] != image.shape[:2]:
+            self._allocate_memory(image.shape[:2])
+
+        # create derivatives
+        _apply_filter(image, self.y_derivative_filter, self.f_y)
+        _apply_filter(self.f_y, self.y_derivative_filter, self.f_yy)
+        _apply_filter(image, self.x_derivative_filter, self.f_x)
+        _apply_filter(self.f_x, self.x_derivative_filter, self.f_xx)
+        _apply_filter(self.f_y, self.x_derivative_filter, self.f_xy)
+        # apply filters
+        _apply_filter(image, self.diagonal_kernel_one, self.f_rl)
+        _apply_filter(self.f_rl, self.diagonal_kernel_one, self.f_rl_rl)
+        _apply_filter(image, self.diagonal_kernel_two, self.f_lr)
+        _apply_filter(self.f_lr, self.diagonal_kernel_two, self.f_lr_lr)
+        _apply_filter(self.f_rl, self.diagonal_kernel_two, self.f_rl_lr)
 
     def _detect_corners_xy(self, image: np.ndarray, k=1) -> np.ndarray:
         # S=gbb.*gdd-gbd.^2+(gbb+gdd).^2;
