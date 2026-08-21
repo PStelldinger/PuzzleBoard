@@ -1,4 +1,3 @@
-import time
 import cv2
 import numpy as np
 from skimage.feature import hessian_matrix, hessian_matrix_eigvals
@@ -74,10 +73,7 @@ def _filter_image(img):
 
 def _detect_puzzles(img, min_width, curved, decoder):
 
-
-    db_time1 = time.time()
     img2, profile, mS, first_eigenvector_x, second_eigenvector_x, both_eigenvectors_y = _filter_image(img)
-    print(f'time filter images {time.time()-db_time1}')
 
     dot_row, dot_col = np.where(mS > 0)
 
