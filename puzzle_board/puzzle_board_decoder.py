@@ -208,19 +208,19 @@ class PuzzlePoleDecoder(PuzzleBoardDecoder):
 
         super().decode(root, sub_dot, img)
         
-        # Reduce the found coordinates by removing the cyclic repetitions
+        # Reduce the found coordinates by removing the cyclic repetitions in y coordinates
         if (self.pole_type & PuzzlePoleDecoder.POLE18):
-            self.positions[self.positions>=PuzzlePoleDecoder.p18+18] -= 18
+            self.positions[0, self.positions[0]>=PuzzlePoleDecoder.p18+18] -= 18
         if (self.pole_type & PuzzlePoleDecoder.POLE12):
-            self.positions[self.positions>=PuzzlePoleDecoder.p12+12] -= 12
+            self.positions[0, self.positions[0]>=PuzzlePoleDecoder.p12+12] -= 12
         if (self.pole_type & PuzzlePoleDecoder.POLE48):
-            self.positions[self.positions>=PuzzlePoleDecoder.p48+48] -= 48
+            self.positions[0, self.positions[0]>=PuzzlePoleDecoder.p48+48] -= 48
         if (self.pole_type & PuzzlePoleDecoder.POLE30):
-            self.positions[self.positions>=PuzzlePoleDecoder.p30+30] -= 30
+            self.positions[0, self.positions[0]>=PuzzlePoleDecoder.p30+30] -= 30
         if (self.pole_type & PuzzlePoleDecoder.POLE24):
-            self.positions[self.positions>=PuzzlePoleDecoder.p24+24] -= 24
+            self.positions[0, self.positions[0]>=PuzzlePoleDecoder.p24+24] -= 24
         if (self.pole_type & PuzzlePoleDecoder.POLE36):
-            self.positions[self.positions>=PuzzlePoleDecoder.p36+36] -= 36
+            self.positions[0, self.positions[0]>=PuzzlePoleDecoder.p36+36] -= 36
         if (self.pole_type & PuzzlePoleDecoder.POLE42):
-            self.positions[self.positions>=PuzzlePoleDecoder.p42+42] -= 42
+            self.positions[0, self.positions[0]>=PuzzlePoleDecoder.p42+42] -= 42
             
